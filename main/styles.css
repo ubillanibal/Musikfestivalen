@@ -1,0 +1,15 @@
+#artists-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 600px;
+  margin: auto;
+}
+
+#artists-container > * {
+  width: 250px;
+  background-color: rgb(96 139 168 / 0.2);
+  border-radius: 20px;
+  border: 2px solid rgb(96 139 168);
+  padding: 16px;
+  box-sizing: border-box;
+}

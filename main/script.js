@@ -23,46 +23,52 @@ async function main() {
   if (festivalData) {
     console.log("Festival Data:", festivalData); //TODO: Remove when done debugging
 
+    //Helper function to keep the code DRY
+    const getFieldById = (id, fieldName) => {
+      const item = festivalData.items.find((item) => item.sys.id === id);
+      return item?.fields[fieldName];
+    };
+
     const artists = festivalData.items
       .filter((item) => item.sys.contentType.sys.id === "artist")
       .map((item) => {
-        const genreID = item.fields.genre.sys.id;
-        const dayID = item.fields.day.sys.id;
-        const stageID = item.fields.stage.sys.id;
+        const { name, description, genre, day, stage } = item.fields;
 
-        const name = item.fields.name;
-        const desc = item.fields.description;
-
-        const genre = festivalData.items.find((item) => item.sys.id === genreID)
-          .fields.name;
-        const day = festivalData.items.find((item) => item.sys.id === dayID)
-          .fields.description;
-        const date = festivalData.items.find((item) => item.sys.id === dayID)
-          .fields.date;
-        const stage = festivalData.items.find((item) => item.sys.id === stageID)
-          .fields.name;
         return {
           name,
-          genre,
-          day,
-          stage,
-          desc,
-          date,
+          desc: description,
+          genre: getFieldById(genre.sys.id, "name"),
+          day: getFieldById(day.sys.id, "description"),
+          date: getFieldById(day.sys.id, "date"),
+          stage: getFieldById(stage.sys.id, "name"),
         };
       });
 
-    console.log("Artists: ", artists);
+    /* console.log("Artist: ", artists); */
 
-    /*     const artistsContainer = document.getElementById("artists-container");
-    const postHTML = festivalData.items.map((artist) => {
-      return `<div class="post">
-                <h2>${artist.fields.name}</h2>
-                <p>${artist.fields.genre}</p>
-                <h2>${artist.fields.stage}</h2>
-                <p>${artist.fields.description}</p>
-              </div>`;
-    });
-    artistsContainer.innerHTML = postHTML; */
+    const artistsContainer = document.getElementById("artists-container");
+    const artistHTML = artists
+      .map(
+        (artist) => `
+      <div class="artist-card">
+        <h2>${artist.name}</h2>
+        <p>${artist.desc}</p>
+        <p>${artist.genre}</p>
+        <p>${artist.day}</p>
+        <p>${artist.date}</p>
+        <p>${artist.stage}</p>
+      </div>`
+      )
+      .join(""); //Removes a pesky ",";
+
+    artistsContainer.innerHTML = artistHTML;
+    console.log("Artists Container", artistsContainer);
+
+    let currentFilters = {
+      day: null,
+      stage: null,
+      genre: null,
+    };
   } else {
     console.error("Failed to fetch festival data");
   }
