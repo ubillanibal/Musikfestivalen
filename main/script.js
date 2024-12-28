@@ -19,7 +19,7 @@ async function fetchData() {
 }
 
 async function main() {
-  const festivalData = await fetchData(); // Wait for the data to load
+  const festivalData = await fetchData();
   if (festivalData) {
     console.log("Festival Data:", festivalData); //TODO: Remove when done debugging
 
@@ -44,31 +44,64 @@ async function main() {
         };
       });
 
-    /* console.log("Artist: ", artists); */
-
     const artistsContainer = document.getElementById("artists-container");
     const artistHTML = artists
       .map(
         (artist) => `
       <div class="artist-card">
         <h2>${artist.name}</h2>
-        <p>${artist.desc}</p>
-        <p>${artist.genre}</p>
         <p>${artist.day}</p>
         <p>${artist.date}</p>
         <p>${artist.stage}</p>
+        <p>${artist.desc}</p>
+        <p>${artist.genre}</p>
       </div>`
       )
-      .join(""); //Removes a pesky ",";
+      .join(""); //Removes a pesky "," between artist-cards
 
     artistsContainer.innerHTML = artistHTML;
-    console.log("Artists Container", artistsContainer);
+    console.log("Artists Container", artistsContainer); //TODO: Remove when done debugging
 
+    //Filter
     let currentFilters = {
-      day: null,
-      stage: null,
-      genre: null,
+      days: [],
+      stages: [],
+      genres: [],
     };
+
+    const applyFilters = () => {
+      const artistsContainer = document.getElementById("artists-container");
+      const artistCards = artistsContainer.querySelectorAll(".artist-card");
+
+      artistCards.forEach((card) => {
+        const artistDay = card.querySelector("p:nth-of-type(1)").textContent;
+        const matchesDay =
+          currentFilters.days.length === 0 ||
+          currentFilters.days.some(
+            (day) => artistDay.toLocaleLowerCase() === day.toLocaleLowerCase()
+          );
+
+        if (matchesDay) {
+          card.style.display = "block";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    };
+
+    document.getElementById("friday-button").addEventListener("click", () => {
+      if (currentFilters.days != "Friday") {
+        currentFilters.days = "Friday";
+      } else {
+        currentFilters.days = null;
+      }
+      applyFilters();
+    });
+
+    document.getElementById("reset-filters").addEventListener("click", () => {
+      currentFilters = { days: [], stages: [], genres: [] };
+      applyFilters();
+    });
   } else {
     console.error("Failed to fetch festival data");
   }
