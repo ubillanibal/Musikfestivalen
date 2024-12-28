@@ -90,17 +90,22 @@ async function main() {
     };
 
     document.getElementById("friday-button").addEventListener("click", () => {
-      if (currentFilters.days != "Friday") {
-        currentFilters.days = "Friday";
+      const day = "Friday";
+      if (currentFilters.days.includes(day)) {
+        // Remove "Friday" if already selected
+        currentFilters.days = currentFilters.days.filter((d) => d !== day);
       } else {
-        currentFilters.days = null;
+        // Add "Friday" to the filters
+        currentFilters.days.push(day);
       }
       applyFilters();
+      console.log("Friday Filter", currentFilters); //TODO: Remove when done debugging
     });
 
     document.getElementById("reset-filters").addEventListener("click", () => {
       currentFilters = { days: [], stages: [], genres: [] };
       applyFilters();
+      console.log("Reset Filters", currentFilters); //TODO: Remove when done debugging
     });
   } else {
     console.error("Failed to fetch festival data");
