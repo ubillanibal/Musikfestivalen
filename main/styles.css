@@ -1,15 +1,59 @@
+/*
+
+https://colorhunt.co/palette/1a1a1d3b1c326a1e55a64d79
+
+*/
+
+body {
+  font-family: "Codystar", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #1a1a1d;
+  color: #cccccc;
+}
+
 #artists-container {
   display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-content: center;
   flex-wrap: wrap;
-  width: 600px;
-  margin: auto;
+  gap: 16px;
+  margin-top: 36px;
+  margin-bottom: 36px;
 }
 
 #artists-container > * {
-  width: 250px;
-  background-color: rgb(96 139 168 / 0.2);
+  width: 300px;
+  background-color: #3b1c32;
   border-radius: 20px;
-  border: 2px solid rgb(96 139 168);
+  border: 2px solid #a64d79;
   padding: 16px;
   box-sizing: border-box;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.button-container > button {
+  background-color: #3b1c32;
+  color: #cccccc;
+  border: 2px solid #a64d79;
+  border-radius: 20px;
+  padding: 8px 16px;
+}
+
+.button-container > button:hover {
+  background-color: #a64d79;
+  color: #3b1c32;
+}
+
+#active-filter {
+  background-color: #a64d79;
+  color: #3b1c32;
+  border: 2px solid #cccccc;
 }
