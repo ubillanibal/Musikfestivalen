@@ -48,7 +48,17 @@ async function main() {
       .filter((item) => item.sys.contentType.sys.id === "day")
       .map((item) => item.fields.description);
 
+    const stages = festivalData.items
+      .filter((item) => item.sys.contentType.sys.id === "stage")
+      .map((item) => item.fields.name);
+
+    const genres = festivalData.items
+      .filter((item) => item.sys.contentType.sys.id === "genre")
+      .map((item) => item.fields.name);
+
     const daysContainer = document.getElementById("days-container");
+    const stagesContainer = document.getElementById("stages-container");
+    const genresContainer = document.getElementById("genres-container");
 
     days.forEach((item) => {
       const button = document.createElement("button");
@@ -57,15 +67,19 @@ async function main() {
       daysContainer.appendChild(button);
     });
 
-    const stages = festivalData.items
-      .filter((item) => item.sys.contentType.sys.id === "stage")
-      .map((item) => item.fields.name);
-    console.log("Stages", stages); //TODO: Remove when done debugging
+    genres.forEach((item) => {
+      const button = document.createElement("button");
+      button.id = `${item.toLocaleLowerCase()}-button`;
+      button.textContent = item;
+      genresContainer.appendChild(button);
+    });
 
-    const genres = festivalData.items
-      .filter((item) => item.sys.contentType.sys.id === "genre")
-      .map((item) => item.fields.name);
-    console.log("Genres", genres); //TODO: Remove when done debugging
+    stages.forEach((item) => {
+      const button = document.createElement("button");
+      button.id = `${item.toLocaleLowerCase()}-button`;
+      button.textContent = item;
+      stagesContainer.appendChild(button);
+    });
 
     const artistsContainer = document.getElementById("artists-container");
     const artistHTML = artists
@@ -105,7 +119,23 @@ async function main() {
             (day) => artistDay.toLocaleLowerCase() === day.toLocaleLowerCase()
           );
 
-        if (matchesDay) {
+        const artistGenre = card.querySelector("p:nth-of-type(5)").textContent;
+        const matchesGenre =
+          currentFilters.genres.length === 0 ||
+          currentFilters.genres.some(
+            (genre) =>
+              artistGenre.toLocaleLowerCase() === genre.toLocaleLowerCase()
+          );
+
+        const artistStage = card.querySelector("p:nth-of-type(3)").textContent;
+        const matchesStage =
+          currentFilters.stages.length === 0 ||
+          currentFilters.stages.some(
+            (stage) =>
+              artistStage.toLocaleLowerCase() === stage.toLocaleLowerCase()
+          );
+
+        if (matchesDay && matchesGenre && matchesStage) {
           card.style.display = "block";
         } else {
           card.style.display = "none";
@@ -118,13 +148,47 @@ async function main() {
         .getElementById(`${day.toLocaleLowerCase()}-button`)
         .addEventListener("click", () => {
           if (currentFilters.days.includes(day)) {
-            // Remove "Friday" if already selected
+            // Remove chosen day if already selected
             currentFilters.days = currentFilters.days.filter((d) => d !== day);
           } else {
             currentFilters.days.push(day);
           }
           applyFilters();
-          console.log("Friday Filter", currentFilters); //TODO: Remove when done debugging
+          console.log("Days Filter", currentFilters); //TODO: Remove when done debugging
+        });
+    });
+
+    genres.forEach((genre) => {
+      document
+        .getElementById(`${genre.toLocaleLowerCase()}-button`)
+        .addEventListener("click", () => {
+          if (currentFilters.genres.includes(genre)) {
+            // Remove chosen day if already selected
+            currentFilters.genres = currentFilters.genres.filter(
+              (d) => d !== genre
+            );
+          } else {
+            currentFilters.genres.push(genre);
+          }
+          applyFilters();
+          console.log("Genres Filter", currentFilters); //TODO: Remove when done debugging
+        });
+    });
+
+    stages.forEach((stage) => {
+      document
+        .getElementById(`${stage.toLocaleLowerCase()}-button`)
+        .addEventListener("click", () => {
+          if (currentFilters.stages.includes(stage)) {
+            // Remove chosen day if already selected
+            currentFilters.stages = currentFilters.stages.filter(
+              (d) => d !== stage
+            );
+          } else {
+            currentFilters.stages.push(stage);
+          }
+          applyFilters();
+          console.log("Stages Filter", currentFilters); //TODO: Remove when done debugging
         });
     });
 
