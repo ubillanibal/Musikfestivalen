@@ -44,6 +44,29 @@ async function main() {
         };
       });
 
+    const days = festivalData.items
+      .filter((item) => item.sys.contentType.sys.id === "day")
+      .map((item) => item.fields.description);
+
+    const daysContainer = document.getElementById("days-container");
+
+    days.forEach((item) => {
+      const button = document.createElement("button");
+      button.id = `${item.toLocaleLowerCase()}-button`;
+      button.textContent = item;
+      daysContainer.appendChild(button);
+    });
+
+    const stages = festivalData.items
+      .filter((item) => item.sys.contentType.sys.id === "stage")
+      .map((item) => item.fields.name);
+    console.log("Stages", stages); //TODO: Remove when done debugging
+
+    const genres = festivalData.items
+      .filter((item) => item.sys.contentType.sys.id === "genre")
+      .map((item) => item.fields.name);
+    console.log("Genres", genres); //TODO: Remove when done debugging
+
     const artistsContainer = document.getElementById("artists-container");
     const artistHTML = artists
       .map(
@@ -70,8 +93,9 @@ async function main() {
     };
 
     const applyFilters = () => {
-      const artistsContainer = document.getElementById("artists-container");
-      const artistCards = artistsContainer.querySelectorAll(".artist-card");
+      const artistCards = document
+        .getElementById("artists-container")
+        .querySelectorAll(".artist-card");
 
       artistCards.forEach((card) => {
         const artistDay = card.querySelector("p:nth-of-type(1)").textContent;
@@ -89,17 +113,19 @@ async function main() {
       });
     };
 
-    document.getElementById("friday-button").addEventListener("click", () => {
-      const day = "Friday";
-      if (currentFilters.days.includes(day)) {
-        // Remove "Friday" if already selected
-        currentFilters.days = currentFilters.days.filter((d) => d !== day);
-      } else {
-        // Add "Friday" to the filters
-        currentFilters.days.push(day);
-      }
-      applyFilters();
-      console.log("Friday Filter", currentFilters); //TODO: Remove when done debugging
+    days.forEach((day) => {
+      document
+        .getElementById(`${day.toLocaleLowerCase()}-button`)
+        .addEventListener("click", () => {
+          if (currentFilters.days.includes(day)) {
+            // Remove "Friday" if already selected
+            currentFilters.days = currentFilters.days.filter((d) => d !== day);
+          } else {
+            currentFilters.days.push(day);
+          }
+          applyFilters();
+          console.log("Friday Filter", currentFilters); //TODO: Remove when done debugging
+        });
     });
 
     document.getElementById("reset-filters").addEventListener("click", () => {
