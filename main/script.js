@@ -52,6 +52,17 @@ async function main() {
     }
 
     const days = extractFields("day", "description");
+
+    const weekOrder = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ];
+    days.sort((a, b) => weekOrder.indexOf(a) - weekOrder.indexOf(b));
     const stages = extractFields("stage", "name");
     const genres = extractFields("genre", "name");
 
@@ -162,6 +173,12 @@ async function main() {
 
     document.getElementById("reset-filters").addEventListener("click", () => {
       currentFilters = { days: [], stages: [], genres: [] };
+
+      //Remove the "selected-filter" class from all buttons
+      document.querySelectorAll(".selected-filter").forEach((button) => {
+        button.classList.remove("selected-filter");
+      });
+
       applyFilters();
       console.log("Reset Filters", currentFilters); //TODO: Remove when done debugging
     });
