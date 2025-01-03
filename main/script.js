@@ -44,42 +44,34 @@ async function main() {
         };
       });
 
-    const days = festivalData.items
-      .filter((item) => item.sys.contentType.sys.id === "day")
-      .map((item) => item.fields.description);
+    //Helper function to keep the code DRY
+    function extractFields(contentType, fieldName) {
+      return festivalData.items
+        .filter((item) => item.sys.contentType.sys.id === contentType)
+        .map((item) => item.fields[fieldName]);
+    }
 
-    const stages = festivalData.items
-      .filter((item) => item.sys.contentType.sys.id === "stage")
-      .map((item) => item.fields.name);
-
-    const genres = festivalData.items
-      .filter((item) => item.sys.contentType.sys.id === "genre")
-      .map((item) => item.fields.name);
+    const days = extractFields("day", "description");
+    const stages = extractFields("stage", "name");
+    const genres = extractFields("genre", "name");
 
     const daysContainer = document.getElementById("days-container");
     const stagesContainer = document.getElementById("stages-container");
     const genresContainer = document.getElementById("genres-container");
 
-    days.forEach((item) => {
-      const button = document.createElement("button");
-      button.id = `${item.toLocaleLowerCase()}-button`;
-      button.textContent = item;
-      daysContainer.appendChild(button);
-    });
+    //Helper function to keep the code DRY
+    function generateFilterButtons(array, container) {
+      array.forEach((item) => {
+        const button = document.createElement("button");
+        button.id = `${item.toLocaleLowerCase()}-button`;
+        button.textContent = item;
+        container.appendChild(button);
+      });
+    }
 
-    genres.forEach((item) => {
-      const button = document.createElement("button");
-      button.id = `${item.toLocaleLowerCase()}-button`;
-      button.textContent = item;
-      genresContainer.appendChild(button);
-    });
-
-    stages.forEach((item) => {
-      const button = document.createElement("button");
-      button.id = `${item.toLocaleLowerCase()}-button`;
-      button.textContent = item;
-      stagesContainer.appendChild(button);
-    });
+    generateFilterButtons(days, daysContainer);
+    generateFilterButtons(genres, genresContainer);
+    generateFilterButtons(stages, stagesContainer);
 
     const artistsContainer = document.getElementById("artists-container");
     const artistHTML = artists
@@ -99,7 +91,7 @@ async function main() {
     artistsContainer.innerHTML = artistHTML;
     console.log("Artists Container", artistsContainer); //TODO: Remove when done debugging
 
-    //Filter
+    //Initiate empty Filter
     let currentFilters = {
       days: [],
       stages: [],
@@ -113,27 +105,25 @@ async function main() {
 
       artistCards.forEach((card) => {
         const artistDay = card.querySelector("p:nth-of-type(1)").textContent;
-        const matchesDay =
-          currentFilters.days.length === 0 ||
-          currentFilters.days.some(
-            (day) => artistDay.toLocaleLowerCase() === day.toLocaleLowerCase()
-          );
-
         const artistGenre = card.querySelector("p:nth-of-type(5)").textContent;
-        const matchesGenre =
-          currentFilters.genres.length === 0 ||
-          currentFilters.genres.some(
-            (genre) =>
-              artistGenre.toLocaleLowerCase() === genre.toLocaleLowerCase()
-          );
-
         const artistStage = card.querySelector("p:nth-of-type(3)").textContent;
-        const matchesStage =
-          currentFilters.stages.length === 0 ||
-          currentFilters.stages.some(
-            (stage) =>
-              artistStage.toLocaleLowerCase() === stage.toLocaleLowerCase()
+
+        //Helper function to keep the code DRY
+        function matchesFilter(filterKey, artistProperty) {
+          const filterArray = currentFilters[filterKey];
+          return (
+            filterArray.length === 0 ||
+            filterArray.some(
+              (filterItem) =>
+                artistProperty.toLocaleLowerCase() ===
+                filterItem.toLocaleLowerCase()
+            )
           );
+        }
+
+        const matchesDay = matchesFilter("days", artistDay);
+        const matchesGenre = matchesFilter("genres", artistGenre);
+        const matchesStage = matchesFilter("stages", artistStage);
 
         if (matchesDay && matchesGenre && matchesStage) {
           card.style.display = "block";
@@ -143,54 +133,29 @@ async function main() {
       });
     };
 
-    days.forEach((day) => {
-      document
-        .getElementById(`${day.toLocaleLowerCase()}-button`)
-        .addEventListener("click", () => {
-          if (currentFilters.days.includes(day)) {
-            // Remove chosen day if already selected
-            currentFilters.days = currentFilters.days.filter((d) => d !== day);
-          } else {
-            currentFilters.days.push(day);
-          }
-          applyFilters();
-          console.log("Days Filter", currentFilters); //TODO: Remove when done debugging
-        });
-    });
+    function setupFilter(array, filterKey) {
+      array.forEach((item) => {
+        document
+          .getElementById(`${item.toLocaleLowerCase()}-button`)
+          .addEventListener("click", () => {
+            if (currentFilters[filterKey].includes(item)) {
+              // Remove the item if already selected
+              currentFilters[filterKey] = currentFilters[filterKey].filter(
+                (i) => i !== item
+              );
+            } else {
+              // Add the item if not already selected
+              currentFilters[filterKey].push(item);
+            }
+            applyFilters();
+            console.log(`${filterKey} Filter`, currentFilters); //TODO: Remove when done debugging
+          });
+      });
+    }
 
-    genres.forEach((genre) => {
-      document
-        .getElementById(`${genre.toLocaleLowerCase()}-button`)
-        .addEventListener("click", () => {
-          if (currentFilters.genres.includes(genre)) {
-            // Remove chosen day if already selected
-            currentFilters.genres = currentFilters.genres.filter(
-              (d) => d !== genre
-            );
-          } else {
-            currentFilters.genres.push(genre);
-          }
-          applyFilters();
-          console.log("Genres Filter", currentFilters); //TODO: Remove when done debugging
-        });
-    });
-
-    stages.forEach((stage) => {
-      document
-        .getElementById(`${stage.toLocaleLowerCase()}-button`)
-        .addEventListener("click", () => {
-          if (currentFilters.stages.includes(stage)) {
-            // Remove chosen day if already selected
-            currentFilters.stages = currentFilters.stages.filter(
-              (d) => d !== stage
-            );
-          } else {
-            currentFilters.stages.push(stage);
-          }
-          applyFilters();
-          console.log("Stages Filter", currentFilters); //TODO: Remove when done debugging
-        });
-    });
+    setupFilter(days, "days");
+    setupFilter(genres, "genres");
+    setupFilter(stages, "stages");
 
     document.getElementById("reset-filters").addEventListener("click", () => {
       currentFilters = { days: [], stages: [], genres: [] };
