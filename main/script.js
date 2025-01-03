@@ -135,21 +135,24 @@ async function main() {
 
     function setupFilter(array, filterKey) {
       array.forEach((item) => {
-        document
-          .getElementById(`${item.toLocaleLowerCase()}-button`)
-          .addEventListener("click", () => {
-            if (currentFilters[filterKey].includes(item)) {
-              // Remove the item if already selected
-              currentFilters[filterKey] = currentFilters[filterKey].filter(
-                (i) => i !== item
-              );
-            } else {
-              // Add the item if not already selected
-              currentFilters[filterKey].push(item);
-            }
-            applyFilters();
-            console.log(`${filterKey} Filter`, currentFilters); //TODO: Remove when done debugging
-          });
+        const button = document.getElementById(
+          `${item.toLocaleLowerCase()}-button`
+        );
+        button.addEventListener("click", () => {
+          if (currentFilters[filterKey].includes(item)) {
+            // Remove the item if already selected
+            currentFilters[filterKey] = currentFilters[filterKey].filter(
+              (i) => i !== item
+            );
+            button.classList.remove("selected-filter");
+          } else {
+            // Add the item if not already selected
+            currentFilters[filterKey].push(item);
+            button.classList.add("selected-filter");
+          }
+          applyFilters();
+          console.log(`${filterKey} Filter`, currentFilters); //TODO: Remove when done debugging
+        });
       });
     }
 

@@ -52,8 +52,8 @@ body {
   color: #3b1c32;
 }
 
-#active-filter {
-  background-color: #a64d79;
-  color: #3b1c32;
-  border: 2px solid #cccccc;
+.selected-filter {
+  background-color: #a64d79 !important;
+  color: #3b1c32 !important;
+  border: 2px solid #cccccc !important;
 }
