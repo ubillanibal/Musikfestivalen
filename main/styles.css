@@ -1,8 +1,21 @@
-/*
+/* https://colorhunt.co/palette/1a1a1d3b1c326a1e55a64d79 */
 
-https://colorhunt.co/palette/1a1a1d3b1c326a1e55a64d79
-
-*/
+/* Reset some default styles */
+body,
+h1,
+h2,
+p,
+ul,
+li,
+a,
+form,
+input,
+textarea,
+button {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 body {
   font-family: "Codystar", sans-serif;
@@ -12,6 +25,82 @@ body {
   color: #cccccc;
 }
 
+header {
+  box-shadow: #1a1a1d;
+  color: #cccccc;
+  display: flex;
+  justify-content: right;
+}
+
+header h1 {
+  padding-left: 1rem;
+}
+
+.menu {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+}
+
+.menu li {
+  padding: 1.5rem;
+}
+
+.menu li a {
+  color: white;
+  text-decoration: none;
+}
+
+.menu li:hover {
+  background-color: #575757;
+  color: #fff;
+}
+
+.active-nav {
+  background-color: #a64d79;
+}
+
+main {
+  flex: 1;
+  padding: 24px;
+}
+
+#about,
+#projects,
+#contact {
+  margin: 24px 0;
+}
+
+.hero {
+  position: relative;
+  background-image: url(../img/hero.jpg);
+  background-size: cover;
+  background-position: center;
+  height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+}
+
+.hero .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+.hero h1 {
+  position: relative;
+  z-index: 2;
+  font-size: 3rem; /* Adjust the font size as needed */
+  margin: 0;
+}
+
 #artists-container {
   display: flex;
   flex-direction: row;
@@ -19,8 +108,8 @@ body {
   align-content: center;
   flex-wrap: wrap;
   gap: 16px;
-  margin-top: 36px;
-  margin-bottom: 36px;
+  margin-top: 24px;
+  margin-bottom: 24px;
 }
 
 #artists-container > * {
@@ -32,28 +121,93 @@ body {
   box-sizing: border-box;
 }
 
-.button-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-  flex-wrap: wrap;
+.artist-card > p {
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 
-.button-container > button {
+.filters {
+  margin-top: 36px;
+  margin-bottom: 36px;
+}
+
+.filters > p {
+  margin-bottom: 8px;
+  font-size: 1.15rem;
+  font-weight: bold;
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: left;
+  flex-wrap: wrap;
+  border-radius: 20px;
+  padding: 8px;
+}
+
+.buttons-container > button {
+  height: 40px;
+  border-radius: 20px;
+  padding-left: 24px;
+  padding-right: 24px;
+  text-align: center;
   background-color: #3b1c32;
   color: #cccccc;
   border: 2px solid #a64d79;
-  border-radius: 20px;
-  padding: 8px 16px;
+  margin: 4px;
 }
 
-.button-container > button:hover {
+.buttons-container > button:hover {
   background-color: #a64d79;
   color: #3b1c32;
+}
+
+@media (hover: none) {
+  .buttons-container > button:hover {
+    background-color: #3b1c32;
+    color: #cccccc;
+  }
 }
 
 .selected-filter {
   background-color: #a64d79 !important;
   color: #3b1c32 !important;
   border: 2px solid #cccccc !important;
+}
+
+#button-reset-filters {
+  height: 40px;
+  border-radius: 20px;
+  padding-left: 24px;
+  padding-right: 24px;
+  text-align: center;
+  background-color: #a64d79;
+  color: white;
+  border: 2px solid white;
+  margin: 4px;
+  font-weight: bold;
+}
+
+#button-reset-filters:hover {
+  background-color: #3b1c32;
+  color: #e3cfcf;
+}
+
+@media (hover: none) {
+  #button-reset-filters:hover {
+    background-color: #a64d79;
+    color: white;
+  }
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+footer {
+  color: #cccccc;
+  padding: 1rem;
+  text-align: center;
 }

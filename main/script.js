@@ -34,12 +34,27 @@ async function main() {
       .map((item) => {
         const { name, description, genre, day, stage } = item.fields;
 
+        // Get raw date string
+        const rawDate = getFieldById(day.sys.id, "date");
+
+        // Parse and format the date
+        const dateObject = new Date(rawDate);
+        const formattedDate = dateObject.toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "long",
+        }); // e.g., "7 June"
+        const formattedTime = dateObject.toLocaleTimeString("en-GB", {
+          hour: "numeric",
+          hour12: true,
+        }); // e.g., "1 AM"
+
         return {
           name,
           desc: description,
           genre: getFieldById(genre.sys.id, "name"),
           day: getFieldById(day.sys.id, "description"),
-          date: getFieldById(day.sys.id, "date"),
+          date: formattedDate,
+          time: formattedTime,
           stage: getFieldById(stage.sys.id, "name"),
         };
       });
@@ -51,8 +66,6 @@ async function main() {
         .map((item) => item.fields[fieldName]);
     }
 
-    const days = extractFields("day", "description");
-
     const weekOrder = [
       "Monday",
       "Tuesday",
@@ -62,6 +75,7 @@ async function main() {
       "Saturday",
       "Sunday",
     ];
+    const days = extractFields("day", "description");
     days.sort((a, b) => weekOrder.indexOf(a) - weekOrder.indexOf(b));
     const stages = extractFields("stage", "name");
     const genres = extractFields("genre", "name");
@@ -91,10 +105,10 @@ async function main() {
       <div class="artist-card">
         <h2>${artist.name}</h2>
         <p>${artist.day}</p>
-        <p>${artist.date}</p>
+        <p>${artist.date} at ${artist.time}</p>
         <p>${artist.stage}</p>
-        <p>${artist.desc}</p>
         <p>${artist.genre}</p>
+        <p>${artist.desc}</p>
       </div>`
       )
       .join(""); //Removes a pesky "," between artist-cards
@@ -116,7 +130,7 @@ async function main() {
 
       artistCards.forEach((card) => {
         const artistDay = card.querySelector("p:nth-of-type(1)").textContent;
-        const artistGenre = card.querySelector("p:nth-of-type(5)").textContent;
+        const artistGenre = card.querySelector("p:nth-of-type(4)").textContent;
         const artistStage = card.querySelector("p:nth-of-type(3)").textContent;
 
         //Helper function to keep the code DRY
