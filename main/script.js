@@ -185,17 +185,19 @@ async function main() {
     setupFilter(genres, "genres");
     setupFilter(stages, "stages");
 
-    document.getElementById("reset-filters").addEventListener("click", () => {
-      currentFilters = { days: [], stages: [], genres: [] };
+    document
+      .getElementById("button-reset-filters")
+      .addEventListener("click", () => {
+        currentFilters = { days: [], stages: [], genres: [] };
 
-      //Remove the "selected-filter" class from all buttons
-      document.querySelectorAll(".selected-filter").forEach((button) => {
-        button.classList.remove("selected-filter");
+        //Remove the "selected-filter" class from all buttons
+        document.querySelectorAll(".selected-filter").forEach((button) => {
+          button.classList.remove("selected-filter");
+        });
+
+        applyFilters();
+        console.log("Reset Filters", currentFilters); //TODO: Remove when done debugging
       });
-
-      applyFilters();
-      console.log("Reset Filters", currentFilters); //TODO: Remove when done debugging
-    });
   } else {
     console.error("Failed to fetch festival data");
   }
