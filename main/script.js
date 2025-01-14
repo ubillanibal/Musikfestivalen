@@ -200,11 +200,14 @@ async function main() {
         applyFilters();
         console.log("Reset Filters", currentFilters); //TODO: Remove when done debugging
       });
-  } else if (SPACE_ID === null && ACCESS_TOKEN === null) {
+  } else if (
+    (SPACE_ID === null || SPACE_ID === "") &&
+    (ACCESS_TOKEN === null || ACCESS_TOKEN === "")
+  ) {
     console.error("Missing space_id and access_token");
-  } else if (SPACE_ID === null) {
+  } else if (SPACE_ID === null || SPACE_ID === "") {
     console.error("Missing space_id");
-  } else if (ACCESS_TOKEN === null) {
+  } else if (ACCESS_TOKEN === null || ACCESS_TOKEN === "") {
     console.error("Missing access_token");
   } else {
     console.error("Failed to fetch festival data");
