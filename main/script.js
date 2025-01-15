@@ -4,7 +4,7 @@ const ACCESS_TOKEN = localStorage.getItem("access_token");
 const API_URL = `${BASE_URL}${SPACE_ID}/entries?access_token=${ACCESS_TOKEN}`;
 
 //Fetchs all data from API
-async function fetchData() {
+const fetchData = async () => {
   try {
     const response = await fetch(API_URL);
     if (!response.ok) {
@@ -16,9 +16,9 @@ async function fetchData() {
     console.error("Error fetching data:", error);
     return null;
   }
-}
+};
 
-async function main() {
+const main = async () => {
   const festivalData = await fetchData();
   if (festivalData) {
     //Helper function to keep the code DRY
@@ -58,11 +58,11 @@ async function main() {
       });
 
     //Helper function to keep the code DRY
-    function extractFields(contentType, fieldName) {
+    const extractFields = (contentType, fieldName) => {
       return festivalData.items
         .filter((item) => item.sys.contentType.sys.id === contentType)
         .map((item) => item.fields[fieldName]);
-    }
+    };
 
     const weekOrder = [
       "Monday",
@@ -83,14 +83,14 @@ async function main() {
     const genresContainer = document.getElementById("genres-container");
 
     //Helper function to keep the code DRY
-    function generateFilterButtons(array, container) {
+    const generateFilterButtons = (array, container) => {
       array.forEach((item) => {
         const button = document.createElement("button");
         button.id = `${item.toLocaleLowerCase()}-button`;
         button.textContent = item;
         container.appendChild(button);
       });
-    }
+    };
 
     generateFilterButtons(days, daysContainer);
     generateFilterButtons(genres, genresContainer);
@@ -131,7 +131,7 @@ async function main() {
         const artistStage = card.querySelector("p:nth-of-type(3)").textContent;
 
         //Helper function to keep the code DRY
-        function matchesFilter(filterKey, artistProperty) {
+        const matchesFilter = (filterKey, artistProperty) => {
           const filterArray = currentFilters[filterKey];
           return (
             filterArray.length === 0 ||
@@ -141,7 +141,7 @@ async function main() {
                 filterItem.toLocaleLowerCase()
             )
           );
-        }
+        };
 
         const matchesDay = matchesFilter("days", artistDay);
         const matchesGenre = matchesFilter("genres", artistGenre);
@@ -155,7 +155,7 @@ async function main() {
       });
     };
 
-    function setupFilter(array, filterKey) {
+    const setupFilter = (array, filterKey) => {
       array.forEach((item) => {
         const button = document.getElementById(
           `${item.toLocaleLowerCase()}-button`
@@ -175,7 +175,7 @@ async function main() {
           applyFilters();
         });
       });
-    }
+    };
 
     setupFilter(days, "days");
     setupFilter(genres, "genres");
@@ -205,6 +205,6 @@ async function main() {
   } else {
     console.error("Failed to fetch festival data");
   }
-}
+};
 
 main();
