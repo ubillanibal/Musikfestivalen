@@ -2,8 +2,6 @@ const BASE_URL = "https://cdn.contentful.com/spaces/";
 const SPACE_ID = localStorage.getItem("space_id");
 const ACCESS_TOKEN = localStorage.getItem("access_token");
 const API_URL = `${BASE_URL}${SPACE_ID}/entries?access_token=${ACCESS_TOKEN}`;
-console.log("ACESS TOKEN:", ACCESS_TOKEN); //TODO: Remove when done debugging
-console.log("SPACE ID:", SPACE_ID); //TODO: Remove when done debugging
 
 //Fetchs all data from API
 async function fetchData() {
@@ -23,8 +21,6 @@ async function fetchData() {
 async function main() {
   const festivalData = await fetchData();
   if (festivalData) {
-    console.log("Festival Data:", festivalData); //TODO: Remove when done debugging
-
     //Helper function to keep the code DRY
     const getFieldById = (id, fieldName) => {
       const item = festivalData.items.find((item) => item.sys.id === id);
@@ -116,7 +112,6 @@ async function main() {
       .join(""); //Removes a pesky "," between artist-cards
 
     artistsContainer.innerHTML = artistHTML;
-    console.log("Artists Container", artistsContainer); //TODO: Remove when done debugging
 
     //Initiate empty Filter
     let currentFilters = {
@@ -178,7 +173,6 @@ async function main() {
             button.classList.add("selected-filter");
           }
           applyFilters();
-          console.log(`${filterKey} Filter`, currentFilters); //TODO: Remove when done debugging
         });
       });
     }
@@ -198,7 +192,6 @@ async function main() {
         });
 
         applyFilters();
-        console.log("Reset Filters", currentFilters); //TODO: Remove when done debugging
       });
   } else if (
     (SPACE_ID === null || SPACE_ID === "") &&
