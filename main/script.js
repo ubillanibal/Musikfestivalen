@@ -32,7 +32,6 @@ const main = async () => {
       .map((item) => {
         const { name, description, genre, day, stage } = item.fields;
 
-        // Get raw date string
         const rawDate = getFieldById(day.sys.id, "date");
 
         // Parse and format the date
